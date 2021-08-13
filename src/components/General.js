@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import '../styles/subSection.css';
 
 class General extends Component {
     constructor(props) {
@@ -7,7 +8,7 @@ class General extends Component {
             name: '',
             address: '',
             phone: '',
-            isSubmitted: false
+            isSubmitted: false,
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -43,9 +44,9 @@ class General extends Component {
     render() {
         return (
             <div>
-                Personal info:<br/>
+                
                 {!this.state.isSubmitted &&
-                <form onSubmit={this.handleSubmit}>
+                <form className="editForm" onSubmit={this.handleSubmit}>
                     <label>
                         Name:
                         <input
@@ -73,14 +74,17 @@ class General extends Component {
                             onChange={this.handleChange} />
                     </label>
                     <br />
+                    
                     <input type="submit" value="Submit" />
+                
                 </form>}
 
-                {this.state.isSubmitted && 
-                    <div>Name: {this.state.name}<br/>
-                    Address: {this.state.address}<br/>
-                    Phone: {this.state.phone}<br/>
-                    <button onClick={this.handleEditClicked}>Edit</button>
+                {this.state.isSubmitted &&
+                    <div className="subSectionDiv">{this.state.name}<br/>
+                    {this.state.address}<br/>
+                    {this.state.phone}<br/>
+                    
+                    <button className="editButton" onClick={this.handleEditClicked}>Edit</button>
                     </div>}
             </div>
         );

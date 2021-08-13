@@ -1,0 +1,17 @@
+.subSectionDiv {
+    border: solid 1px black;
+    margin: 5px;
+    padding: 5px;
+}
+
+.editForm {
+    display:auto;
+    border: solid 1px black;
+    margin: 5px;
+    padding: 5px;
+}
+
+.editButton {
+    margin: 10px;
+}
+

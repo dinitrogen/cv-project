@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import '../styles/subSection.css';
 
 class Experience extends Component {
     constructor(props) {
         super(props);
-        console.log(props);
+        // console.log(props);
         this.state = {
             name: '',
             address: '',
@@ -43,9 +44,9 @@ class Experience extends Component {
     render() {
         return (
             <div>
-                Employer Info:<br/>
+                
                 {!this.state.isSubmitted &&
-                <form onSubmit={this.handleSubmit}>
+                <form className="editForm" onSubmit={this.handleSubmit}>
                     <label>
                         Name:
                         <input
@@ -68,10 +69,10 @@ class Experience extends Component {
                 </form>}
 
                 {this.state.isSubmitted && 
-                    <div>Name: {this.state.name}<br/>
+                    <div className="subSectionDiv">Name: {this.state.name}<br/>
                     Address: {this.state.address}<br/>
-                    <button onClick={this.handleEditClicked}>Edit</button>
-                    <button onClick={() => this.props.handleDelete(this.props.type, this.props.id)}>Delete</button>
+                    <button className="editButton" onClick={this.handleEditClicked}>Edit</button>
+                    <button className="editButton" onClick={() => this.props.handleDelete(this.props.type, this.props.id)}>Delete</button>
                     </div>}
             </div>
         );

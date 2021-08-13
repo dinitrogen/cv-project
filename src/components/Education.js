@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import '../styles/subSection.css';
 
 class Education extends Component {
     constructor(props) {
         super(props);
-        console.log(props);
+        // console.log(props);
         this.state = {
             name: '',
             address: '',
@@ -41,11 +42,12 @@ class Education extends Component {
     }
 
     render() {
+
         return (
-            <div>
-                School Info:<br/>
+            <div >
+                
                 {!this.state.isSubmitted &&
-                <form onSubmit={this.handleSubmit}>
+                <form className="editForm" onSubmit={this.handleSubmit}>
                     <label>
                         Name:
                         <input
@@ -64,14 +66,18 @@ class Education extends Component {
                             onChange={this.handleChange} />
                     </label>
                     <br />
+                   
                     <input type="submit" value="Submit" />
                 </form>}
 
                 {this.state.isSubmitted && 
-                    <div>Name: {this.state.name}<br/>
+                    <div className="subSectionDiv">Name: {this.state.name}<br/>
                     Address: {this.state.address}<br/>
-                    <button onClick={this.handleEditClicked}>Edit</button>
-                    <button onClick={() => this.props.handleDelete(this.props.type, this.props.id)}>Delete</button>
+                    
+                    <div>
+                        <button className="editButton" onClick={this.handleEditClicked}>Edit</button>
+                        <button className="editButton" onClick={() => this.props.handleDelete(this.props.type, this.props.id)}>Delete</button>
+                    </div>
                     </div>}
             </div>
         );

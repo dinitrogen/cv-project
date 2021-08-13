@@ -1,4 +1,4 @@
-import './App.css';
+import './styles/App.css';
 import CVform from './components/CVform.js';
 
 function App() {
