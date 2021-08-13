@@ -3,6 +3,7 @@ import General from './General.js';
 import Education from './Education.js';
 import Experience from './Experience.js';
 import '../styles/CVform.css';
+import ReactToPrint from 'react-to-print';
 
 class CVform extends Component {
     constructor(props) {
@@ -23,7 +24,6 @@ class CVform extends Component {
     this.handleDelete = this.handleDelete.bind(this);
     this.showPreviewMode = this.showPreviewMode.bind(this);
     this.hidePreviewMode = this.hidePreviewMode.bind(this);
-    this.generatePDF = this.generatePDF.bind(this);
     }
 
     addSchoolForm(event) {
@@ -94,7 +94,6 @@ class CVform extends Component {
         document.querySelectorAll('.editForm').forEach(function(button) {
             button.style.display = 'none';
         });
-
     }
 
     hidePreviewMode() {
@@ -108,53 +107,54 @@ class CVform extends Component {
         });
         document.querySelectorAll('.editForm').forEach(function(button) {
             button.style.display = 'block';
-            
         });
     }
 
-    generatePDF() {
-        // TODO
-        return;
-    }
-
-
     render() {
         return (
-            <div className="CVcontainer">
+            <div className="CVForm">
                 
-                    <div>
-                        <h2>Personal Info:</h2>
-                        <div className="CVFormDiv">
-                            <General inPreviewMode={this.state.inPreviewMode}/>
-                        </div>
-                        <br />
-                        <h2>Education:</h2>
-                        <button className="editButton" onClick={this.addSchoolForm}>Add School</button>
-                        
-                        <div className="CVFormDiv">
-                            {this.state.schoolForms.map((schoolForm) => {
-                                    return schoolForm;
-                                })}
-                        </div>
-                        <br />
-                        <h2>Experience:</h2>
-                        <button className="editButton" onClick={this.addExperienceForm}>Add Experience</button>
-                        
-                        <div className="CVFormDiv">
-                            {this.state.experienceForms.map((experienceForm) => {
-                                return experienceForm;
-                            })}
-                        </div>
-                        <br />
-                        {!this.state.inPreviewMode &&
-                        <button onClick={this.showPreviewMode}>Show preview</button>}
+                <div className="CVcontainer" ref={el => (this.componentRef = el)}>
+                    <h2>Personal Info:</h2>
+                    <div className="CVFormDiv">
+                        <General inPreviewMode={this.state.inPreviewMode}/>
                     </div>
+                    <br />
+                    <h2>Education:</h2>
+                    <button className="editButton" onClick={this.addSchoolForm}>Add School</button>
+                    
+                    <div className="CVFormDiv">
+                        {this.state.schoolForms.map((schoolForm) => {
+                                return schoolForm;
+                            })}
+                    </div>
+                    <br />
+                    <h2>Experience:</h2>
+                    <button className="editButton" onClick={this.addExperienceForm}>Add Experience</button>
+                    
+                    <div className="CVFormDiv">
+                        {this.state.experienceForms.map((experienceForm) => {
+                            return experienceForm;
+                        })}
+                    </div>
+                    <br />
+                    {!this.state.inPreviewMode &&
+                    <button onClick={this.showPreviewMode}>Show preview</button>}
+                </div>
+                    
 
                 {this.state.inPreviewMode &&
                     <div>
                         <button onClick={this.hidePreviewMode}>Show edit mode</button>
                         <br />
-                        {/* <button onClick={this.generatePDF}>Generate pdf!</button> */}
+                        
+                        <ReactToPrint
+                            trigger={() => {
+                                return <button className="printButton">Print</button>;
+                            }}
+                            content={() => this.componentRef}
+                        />
+                        
                     </div>
                 }
 

@@ -1,4 +1,9 @@
+.CVForm {
+    text-align: center;
+}
+
 .CVcontainer {
+    text-align: center;
     width: 60%;
     margin: 0 auto;
 }
@@ -8,3 +13,6 @@
     border: solid 3px black;
 }
 
+.printButton {
+    margin: 10px;
+}
