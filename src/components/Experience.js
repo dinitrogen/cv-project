@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 
-class Education2 extends Component {
+class Experience extends Component {
     constructor(props) {
         super(props);
+        console.log(props);
         this.state = {
             name: '',
             address: '',
-            isSubmitted: false
+            isSubmitted: false,
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -42,7 +43,7 @@ class Education2 extends Component {
     render() {
         return (
             <div>
-                School Info:<br/>
+                Employer Info:<br/>
                 {!this.state.isSubmitted &&
                 <form onSubmit={this.handleSubmit}>
                     <label>
@@ -70,6 +71,7 @@ class Education2 extends Component {
                     <div>Name: {this.state.name}<br/>
                     Address: {this.state.address}<br/>
                     <button onClick={this.handleEditClicked}>Edit</button>
+                    <button onClick={() => this.props.handleDelete(this.props.type, this.props.id)}>Delete</button>
                     </div>}
             </div>
         );
@@ -77,4 +79,4 @@ class Education2 extends Component {
 
 }
 
-export default Education2;
+export default Experience;

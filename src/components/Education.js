@@ -3,19 +3,16 @@ import React, { Component } from 'react';
 class Education extends Component {
     constructor(props) {
         super(props);
+        console.log(props);
         this.state = {
-            schools: [],
-            schoolID: 1,
-            schoolName: '',
-            schoolAddress: '',
-            formHidden: true,
-            editingOn: false,
+            name: '',
+            address: '',
+            isSubmitted: false,
         };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.showForm = this.showForm.bind(this);
-        // this.deleteEntry = this.deleteEntry.bind(this);
+        this.handleEditClicked = this.handleEditClicked.bind(this);
     }
 
     handleChange(event) {
@@ -24,107 +21,58 @@ class Education extends Component {
         const name = target.name;
 
         this.setState({
-                [name]: value
+            [name]: value
         });
     }
 
     handleSubmit(event) {
         event.preventDefault();
-        let school = {
-            id: this.state.schoolID,
-            name: this.state.schoolName,
-            address: this.state.schoolAddress,
-        }
-        let prevID = this.state.schoolID;
-        prevID++;
+        
         this.setState({
-            schools: this.state.schools.concat(school),
-            schoolID: prevID,
-            schoolName: '',
-            schoolAddress: '',
-            formHidden: true,
-            editingOn: false
-        });
-        console.log(this.state.schools);
-    }
-
-    showForm() {
-        this.setState({
-            formHidden: false
+            
+            isSubmitted: true
         });
     }
 
-    deleteEntry(id) {
-        let newSchools = this.state.schools.filter(school => school.id !== id);
+    handleEditClicked() {
         this.setState({
-            schools: newSchools
+            isSubmitted: false
         });
     }
-
-    editEntry(id) {
-        this.setState({
-            editingOn: true
-        });
-    }
-
-    updateEntry() {
-        this.setState({
-            editingOn: false
-        });
-    }
-
 
     render() {
         return (
             <div>
-                Education:<br/>
-                {this.state.formHidden &&
-                <button onClick={this.showForm}>Add school</button>}
-
-                {!this.state.formHidden &&
+                School Info:<br/>
+                {!this.state.isSubmitted &&
                 <form onSubmit={this.handleSubmit}>
                     <label>
-                        School name:
+                        Name:
                         <input
-                            name="schoolName"
+                            name="name"
                             type="text"
-                            value={this.state.schoolName}
+                            value={this.state.name}
                             onChange={this.handleChange} />
                     </label>
                     <br />
                     <label>
-                        School address:
+                        Address:
                         <input
-                            name="schoolAddress"
+                            name="address"
                             type="text"
-                            value={this.state.schoolAddress}
+                            value={this.state.address}
                             onChange={this.handleChange} />
                     </label>
                     <br />
                     <input type="submit" value="Submit" />
                 </form>}
 
-                <div>
-                    {this.state.schools.map((school) => {
-                        return (
-                            <div key={school.id}>
-                                <div>
-                                    <p>{school.name}<br/>
-                                    {school.address}</p>
-                                    <button onClick={this.deleteEntry.bind(this, school.id)}>Delete</button>
-                                </div>
-                                {this.state.editingOn &&
-                                <div>
-                                    <p>Editing form here</p>
-                                    <button onClick={this.updateEntry.bind(this)}>Update</button>
-                                </div>}
-                                {!this.state.editingOn &&
-                                <button onClick={this.editEntry.bind(this,school.id)}>Edit entry</button>}
-                            </div>
-                        )
-                    })}
-                </div>
-
+                {this.state.isSubmitted && 
+                    <div>Name: {this.state.name}<br/>
+                    Address: {this.state.address}<br/>
+                    <button onClick={this.handleEditClicked}>Edit</button>
+                    <button onClick={() => this.props.handleDelete(this.props.type, this.props.id)}>Delete</button>
+                    </div>}
             </div>
         );
     }
