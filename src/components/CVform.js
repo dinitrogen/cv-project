@@ -1,166 +1,141 @@
-import React, { Component } from 'react';
+import React, { useState, useRef } from 'react';
+import ReactToPrint from 'react-to-print';
 import General from './General.js';
 import Education from './Education.js';
 import Experience from './Experience.js';
 import '../styles/CVform.css';
-import ReactToPrint from 'react-to-print';
 
-class CVform extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            schoolForms: [],
-            experienceForms: [],
-            schoolForm: {
-                id: 1
-            },
-            experienceForm: {
-                id: 1
-            },
-            inPreviewMode: false
-        }
-    this.addSchoolForm = this.addSchoolForm.bind(this);
-    this.addExperienceForm = this.addExperienceForm.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
-    this.showPreviewMode = this.showPreviewMode.bind(this);
-    this.hidePreviewMode = this.hidePreviewMode.bind(this);
+
+const CVform = () => {
+
+    const [schoolFormIds, setSchoolFormIds] = useState([])
+    const [schoolFormId, setSchoolFormId] = useState(1);
+    const [experienceFormIds, setExperienceFormIds] = useState([]);
+    const [experienceFormId, setExperienceFormId] = useState(1);
+    const [inPreviewMode, setInPreviewMode] = useState(false);
+
+    const componentRef = useRef();
+    
+
+    const addSchoolForm = () => {
+    
+        let newSchoolFormId = schoolFormId + 1;
+
+        setSchoolFormId(newSchoolFormId);
+        setSchoolFormIds([...schoolFormIds, newSchoolFormId])
+
     }
 
-    addSchoolForm(event) {
-        const schoolForms = this.state.schoolForms;
-        let prevID = this.state.schoolForm.id;
-        prevID++;
-        this.setState({
-            schoolForms: schoolForms.concat(<Education 
-                                            type="education"
-                                            key={this.state.schoolForm.id} // key is required and may be a "reserved" keyword for React
-                                            id={this.state.schoolForm.id}
-                                            handleDelete={this.handleDelete}
-                                             />),
-            schoolForm: {
-                id: prevID
-            }
-        });
+    const addExperienceForm = () => {
+        
+            let newExperienceFormId = experienceFormId + 1;
+            
+            setExperienceFormId(newExperienceFormId);
+            setExperienceFormIds([...experienceFormIds, newExperienceFormId]);
     }
 
-    addExperienceForm(event) {
-        const experienceForms = this.state.experienceForms;
-        let prevID = this.state.experienceForm.id;
-        prevID++;
-        this.setState({
-            experienceForms: experienceForms.concat(<Experience 
-                                            type="experience"
-                                            key={this.state.experienceForm.id} // key is required and may be a "reserved" keyword for React
-                                            id={this.state.experienceForm.id}
-                                            handleDelete={this.handleDelete}
-                                             />),
-            experienceForm: {
-                id: prevID
-            }
-        });
-    }
+    const handleDelete = (type, id) => {
+       
+        if (type === 'education') {    
+            setSchoolFormIds(schoolFormIds.filter((schoolFormId) => {
+                return schoolFormId !== id;
+            }));
 
-    handleDelete(type, id) {
-        // alert('Deleted' + id + type);
-        if (type === 'education') {
-            // console.log(this.state.schoolForms);
-            let newSchoolForms = this.state.schoolForms.filter((schoolForm) => {
-                // console.log(id, schoolForm.key);
-                return schoolForm.props.id !== id;
-            });
-
-            this.setState({
-                schoolForms: newSchoolForms
-            });
         } else {
-            // console.log(this.state.experienceForms);
-            let newExperienceForms = this.state.experienceForms.filter((experienceForm) => {
-                return experienceForm.props.id !== id;
-            });
-
-            this.setState({
-                experienceForms: newExperienceForms
-            });
+            setExperienceFormIds(experienceFormIds.filter((experienceFormId) => {
+                return experienceFormId !== id;
+            }));
         }
     }
 
-    showPreviewMode() {
-        this.setState({
-            inPreviewMode: true
-        });
+    const showPreviewMode = () => {
+        
+        setInPreviewMode(true);
+        
         document.querySelectorAll('.editButton').forEach(function(button) {
             button.style.display = 'none';
         });
-        document.querySelectorAll('.editForm').forEach(function(button) {
-            button.style.display = 'none';
+        document.querySelectorAll('.editForm').forEach(function(form) {
+            form.style.display = 'none';
         });
     }
 
-    hidePreviewMode() {
-        this.setState({
-            inPreviewMode: false
-        });
+    const hidePreviewMode = () => {
+        
+        setInPreviewMode(false);
+        
         document.querySelectorAll('.editButton').forEach(function(button) {
             button.style.display = 'inline';
             button.style.marginLeft = 'auto';
             button.style.marginRight = 'auto';
         });
-        document.querySelectorAll('.editForm').forEach(function(button) {
-            button.style.display = 'block';
+        document.querySelectorAll('.editForm').forEach(function(form) {
+            form.style.display = 'block';
         });
     }
 
-    render() {
-        return (
-            <div className="CVForm">
-                
-                <div className="CVcontainer" ref={el => (this.componentRef = el)}>
-                    <h2>Personal Info:</h2>
-                    <div className="CVFormDiv">
-                        <General inPreviewMode={this.state.inPreviewMode}/>
-                    </div>
-                    <br />
-                    <h2>Education:</h2>
-                    <button className="editButton" onClick={this.addSchoolForm}>Add School</button>
-                    
-                    <div className="CVFormDiv">
-                        {this.state.schoolForms.map((schoolForm) => {
-                                return schoolForm;
-                            })}
-                    </div>
-                    <br />
-                    <h2>Experience:</h2>
-                    <button className="editButton" onClick={this.addExperienceForm}>Add Experience</button>
-                    
-                    <div className="CVFormDiv">
-                        {this.state.experienceForms.map((experienceForm) => {
-                            return experienceForm;
-                        })}
-                    </div>
-                    <br />
-                    {!this.state.inPreviewMode &&
-                    <button onClick={this.showPreviewMode}>Show preview</button>}
+    const schoolFormDisplay = schoolFormIds.map((schoolFormId) =>
+        <Education
+        type="education"
+        key={schoolFormId} // key is required and may be a "reserved" keyword for React
+        id={schoolFormId}
+        handleDelete={handleDelete}
+        />
+    );
+
+    const experienceFormDisplay = experienceFormIds.map((experienceFormId) =>
+        <Experience 
+            type="experience"
+            key={experienceFormId} // key is required and may be a "reserved" keyword for React
+            id={experienceFormId}
+            handleDelete={handleDelete}
+            />
+    );
+
+    return (
+        <div className="CVForm">
+            
+            <div className="CVcontainer" ref={componentRef}>
+                <h2>Personal Info:</h2>
+                <div className="CVFormDiv">
+                    <General inPreviewMode={inPreviewMode}/>
                 </div>
-                    
-
-                {this.state.inPreviewMode &&
-                    <div>
-                        <button onClick={this.hidePreviewMode}>Show edit mode</button>
-                        <br />
-                        
-                        <ReactToPrint
-                            trigger={() => {
-                                return <button className="printButton">Print</button>;
-                            }}
-                            content={() => this.componentRef}
-                        />
-                        
-                    </div>
-                }
-
+                <br />
+                <h2>Education:</h2>
+                <button className="editButton" onClick={addSchoolForm}>Add School</button>
+                
+                <div className="CVFormDiv">
+                    {schoolFormDisplay}
+                </div>
+                <br />
+                <h2>Experience:</h2>
+                <button className="editButton" onClick={addExperienceForm}>Add Experience</button>
+                
+                <div className="CVFormDiv">
+                    {experienceFormDisplay}
+                </div>
+                <br />
+                {!inPreviewMode &&
+                <button onClick={showPreviewMode}>Show preview</button>}
             </div>
-        );
-    }
+                
+
+            {inPreviewMode &&
+                <div>
+                    <button onClick={hidePreviewMode}>Show edit mode</button>
+                    <br />
+                    
+                    <ReactToPrint
+                        trigger={() => <button className="printButton">Print</button>}
+                        content={() => componentRef.current}
+                    />
+                    
+                </div>
+            }
+
+        </div>
+    );
+    
 
 }
 

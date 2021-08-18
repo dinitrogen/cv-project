@@ -1,95 +1,85 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import '../styles/subSection.css';
 
-class General extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            name: '',
-            address: '',
-            phone: '',
-            isSubmitted: false,
-        };
+const General = () => {
 
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleEditClicked = this.handleEditClicked.bind(this);
-    }
+    const [name, setName] = useState('');
+    const [address, setAddress] = useState('');
+    const [phone, setPhone] = useState('');
+    const [isSubmitted, setIsSubmitted] = useState(false);
 
-    handleChange(event) {
+    const handleChange = (event) => {
         const target = event.target;
         const value = target.value;
         const name = target.name;
 
-        this.setState({
-            [name]: value
-        });
+        if (name === 'name') {
+            setName(value);
+        } else if (name === 'address') {
+            setAddress(value);
+        } else if (name === 'phone') {
+            setPhone(value);
+        }
     }
 
-    handleSubmit(event) {
+    const handleSubmit = (event) => {
         event.preventDefault();
         
-        this.setState({
+        setIsSubmitted(true);
+    }
+
+    const handleEditClicked = () => {
+        
+        setIsSubmitted(false);
+    }
+
+    
+    return (
+        <div>
             
-            isSubmitted: true
-        });
-    }
-
-    handleEditClicked() {
-        this.setState({
-            isSubmitted: false
-        });
-    }
-
-    render() {
-        return (
-            <div>
+            {!isSubmitted &&
+            <form className="editForm" onSubmit={handleSubmit}>
+                <label>
+                    Name:
+                    <input
+                        name="name"
+                        type="text"
+                        value={name}
+                        onChange={handleChange} />
+                </label>
+                <br />
+                <label>
+                    Address:
+                    <input
+                        name="address"
+                        type="text"
+                        value={address}
+                        onChange={handleChange} />
+                </label>
+                <br />
+                <label>
+                    Phone:
+                    <input
+                        name="phone"
+                        type="text"
+                        value={phone}
+                        onChange={handleChange} />
+                </label>
+                <br />
                 
-                {!this.state.isSubmitted &&
-                <form className="editForm" onSubmit={this.handleSubmit}>
-                    <label>
-                        Name:
-                        <input
-                            name="name"
-                            type="text"
-                            value={this.state.name}
-                            onChange={this.handleChange} />
-                    </label>
-                    <br />
-                    <label>
-                        Address:
-                        <input
-                            name="address"
-                            type="text"
-                            value={this.state.address}
-                            onChange={this.handleChange} />
-                    </label>
-                    <br />
-                    <label>
-                        Phone:
-                        <input
-                            name="phone"
-                            type="text"
-                            value={this.state.phone}
-                            onChange={this.handleChange} />
-                    </label>
-                    <br />
-                    
-                    <input type="submit" value="Submit" />
+                <input type="submit" value="Submit" />
+            
+            </form>}
+
+            {isSubmitted &&
+                <div className="subSectionDiv">{name}<br/>
+                {address}<br/>
+                {phone}<br/>
                 
-                </form>}
-
-                {this.state.isSubmitted &&
-                    <div className="subSectionDiv">{this.state.name}<br/>
-                    {this.state.address}<br/>
-                    {this.state.phone}<br/>
-                    
-                    <button className="editButton" onClick={this.handleEditClicked}>Edit</button>
-                    </div>}
-            </div>
-        );
-    }
-
+                <button className="editButton" onClick={handleEditClicked}>Edit</button>
+                </div>}
+        </div>
+    );
 }
 
 export default General;
