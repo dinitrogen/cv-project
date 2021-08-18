@@ -1,14 +1,16 @@
 import React, { useState, useRef } from 'react';
+import ReactToPrint from 'react-to-print';
 import General from './General.js';
 import Education from './Education.js';
 import Experience from './Experience.js';
 import '../styles/CVform.css';
-import ReactToPrint from 'react-to-print';
+
 
 const CVform = () => {
-    const [schoolForms, setSchoolForms] = useState([]);
-    const [experienceForms, setExperienceForms] = useState([]);
+
+    const [schoolFormIds, setSchoolFormIds] = useState([])
     const [schoolFormId, setSchoolFormId] = useState(1);
+    const [experienceFormIds, setExperienceFormIds] = useState([]);
     const [experienceFormId, setExperienceFormId] = useState(1);
     const [inPreviewMode, setInPreviewMode] = useState(false);
 
@@ -16,57 +18,33 @@ const CVform = () => {
     
 
     const addSchoolForm = () => {
-        // const schoolForms = schoolForms;
-        // let prevID = schoolFormId;
-        // prevID++;
-        
-        setSchoolForms(schoolForms.concat(<Education 
-                                            type="education"
-                                            key={schoolFormId} // key is required and may be a "reserved" keyword for React
-                                            id={schoolFormId}
-                                            handleDelete={handleDelete}
-                                             />));
+    
+        let newSchoolFormId = schoolFormId + 1;
 
-        setSchoolFormId(schoolFormId + 1);
-        console.log(schoolForms);
+        setSchoolFormId(newSchoolFormId);
+        setSchoolFormIds([...schoolFormIds, newSchoolFormId])
 
     }
 
     const addExperienceForm = () => {
-        // const experienceForms = this.state.experienceForms;
-        // let prevID = this.state.experienceForm.id;
-        // prevID++;
         
-       
-            setExperienceForms(experienceForms.concat(<Experience 
-                                            type="experience"
-                                            key={experienceFormId} // key is required and may be a "reserved" keyword for React
-                                            id={experienceFormId}
-                                            handleDelete={handleDelete}
-                                             />));
-            setExperienceFormId(experienceFormId + 1);
-            console.log(experienceForms);
-
+            let newExperienceFormId = experienceFormId + 1;
+            
+            setExperienceFormId(newExperienceFormId);
+            setExperienceFormIds([...experienceFormIds, newExperienceFormId]);
     }
 
     const handleDelete = (type, id) => {
-        alert('Deleted' + id + type);
-        if (type === 'education') {
-            // console.log(this.state.schoolForms);
-            let newSchoolForms = schoolForms.filter((schoolForm) => {
-                console.log(id, schoolForm.props.id);
-                return schoolForm.props.id !== id;
-            });
-
-            setSchoolForms(newSchoolForms);
+       
+        if (type === 'education') {    
+            setSchoolFormIds(schoolFormIds.filter((schoolFormId) => {
+                return schoolFormId !== id;
+            }));
 
         } else {
-            // console.log(this.state.experienceForms);
-            let newExperienceForms = experienceForms.filter((experienceForm) => {
-                return experienceForm.props.id !== id;
-            });
-
-            setExperienceForms(newExperienceForms);
+            setExperienceFormIds(experienceFormIds.filter((experienceFormId) => {
+                return experienceFormId !== id;
+            }));
         }
     }
 
@@ -77,8 +55,8 @@ const CVform = () => {
         document.querySelectorAll('.editButton').forEach(function(button) {
             button.style.display = 'none';
         });
-        document.querySelectorAll('.editForm').forEach(function(button) {
-            button.style.display = 'none';
+        document.querySelectorAll('.editForm').forEach(function(form) {
+            form.style.display = 'none';
         });
     }
 
@@ -91,11 +69,28 @@ const CVform = () => {
             button.style.marginLeft = 'auto';
             button.style.marginRight = 'auto';
         });
-        document.querySelectorAll('.editForm').forEach(function(button) {
-            button.style.display = 'block';
+        document.querySelectorAll('.editForm').forEach(function(form) {
+            form.style.display = 'block';
         });
     }
 
+    const schoolFormDisplay = schoolFormIds.map((schoolFormId) =>
+        <Education
+        type="education"
+        key={schoolFormId} // key is required and may be a "reserved" keyword for React
+        id={schoolFormId}
+        handleDelete={handleDelete}
+        />
+    );
+
+    const experienceFormDisplay = experienceFormIds.map((experienceFormId) =>
+        <Experience 
+            type="experience"
+            key={experienceFormId} // key is required and may be a "reserved" keyword for React
+            id={experienceFormId}
+            handleDelete={handleDelete}
+            />
+    );
 
     return (
         <div className="CVForm">
@@ -110,18 +105,14 @@ const CVform = () => {
                 <button className="editButton" onClick={addSchoolForm}>Add School</button>
                 
                 <div className="CVFormDiv">
-                    {schoolForms.map((schoolForm) => {
-                            return schoolForm;
-                        })}
+                    {schoolFormDisplay}
                 </div>
                 <br />
                 <h2>Experience:</h2>
                 <button className="editButton" onClick={addExperienceForm}>Add Experience</button>
                 
                 <div className="CVFormDiv">
-                    {experienceForms.map((experienceForm) => {
-                        return experienceForm;
-                    })}
+                    {experienceFormDisplay}
                 </div>
                 <br />
                 {!inPreviewMode &&

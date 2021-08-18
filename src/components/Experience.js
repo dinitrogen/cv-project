@@ -1,83 +1,70 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import '../styles/subSection.css';
 
-class Experience extends Component {
-    constructor(props) {
-        super(props);
-        // console.log(props);
-        this.state = {
-            name: '',
-            address: '',
-            isSubmitted: false,
-        };
+const Experience = (props) => {
 
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleEditClicked = this.handleEditClicked.bind(this);
-    }
+    const [name, setName] = useState('');
+    const [address, setAddress] = useState('');
+    const [isSubmitted, setIsSubmitted] = useState(false);
 
-    handleChange(event) {
+    const handleChange = (event) => {
         const target = event.target;
         const value = target.value;
         const name = target.name;
 
-        this.setState({
-            [name]: value
-        });
+        if (name === 'name') {
+            setName(value);
+        } else if (name === 'address') {
+            setAddress(value);
+        }
     }
 
-    handleSubmit(event) {
+    const handleSubmit = (event) => {
         event.preventDefault();
         
-        this.setState({
+        setIsSubmitted(true);
+    }
+
+    const handleEditClicked = () => {
+        
+        setIsSubmitted(false);
+    }
+
+    
+    return (
+        <div>
             
-            isSubmitted: true
-        });
-    }
+            {!isSubmitted &&
+            <form className="editForm" onSubmit={handleSubmit}>
+                <label>
+                    Name:
+                    <input
+                        name="name"
+                        type="text"
+                        value={name}
+                        onChange={handleChange} />
+                </label>
+                <br />
+                <label>
+                    Address:
+                    <input
+                        name="address"
+                        type="text"
+                        value={address}
+                        onChange={handleChange} />
+                </label>
+                <br />
+                <input type="submit" value="Submit" />
+            </form>}
 
-    handleEditClicked() {
-        this.setState({
-            isSubmitted: false
-        });
-    }
-
-    render() {
-        return (
-            <div>
-                
-                {!this.state.isSubmitted &&
-                <form className="editForm" onSubmit={this.handleSubmit}>
-                    <label>
-                        Name:
-                        <input
-                            name="name"
-                            type="text"
-                            value={this.state.name}
-                            onChange={this.handleChange} />
-                    </label>
-                    <br />
-                    <label>
-                        Address:
-                        <input
-                            name="address"
-                            type="text"
-                            value={this.state.address}
-                            onChange={this.handleChange} />
-                    </label>
-                    <br />
-                    <input type="submit" value="Submit" />
-                </form>}
-
-                {this.state.isSubmitted && 
-                    <div className="subSectionDiv">Name: {this.state.name}<br/>
-                    Address: {this.state.address}<br/>
-                    <button className="editButton" onClick={this.handleEditClicked}>Edit</button>
-                    <button className="editButton" onClick={() => this.props.handleDelete(this.props.type, this.props.id)}>Delete</button>
-                    </div>}
-            </div>
-        );
-    }
-
+            {isSubmitted && 
+                <div className="subSectionDiv">Name: {name}<br/>
+                Address: {address}<br/>
+                <button className="editButton" onClick={handleEditClicked}>Edit</button>
+                <button className="editButton" onClick={() => props.handleDelete(props.type, props.id)}>Delete</button>
+                </div>}
+        </div>
+    );
 }
 
 export default Experience;
