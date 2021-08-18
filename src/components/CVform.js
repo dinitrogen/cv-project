@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import ReactToPrint from 'react-to-print';
+import Header from './Header.js';
 import General from './General.js';
 import Education from './Education.js';
 import Experience from './Experience.js';
@@ -96,14 +97,13 @@ const CVform = () => {
         <div className="CVForm">
             
             <div className="CVcontainer" ref={componentRef}>
-                <h2>Personal Info:</h2>
-                <div className="CVFormDiv">
-                    <General inPreviewMode={inPreviewMode}/>
-                </div>
-                <br />
+                
+                <Header />
+                
                 <h2>Education:</h2>
                 <button className="editButton" onClick={addSchoolForm}>Add School</button>
-                
+
+
                 <div className="CVFormDiv">
                     {schoolFormDisplay}
                 </div>
